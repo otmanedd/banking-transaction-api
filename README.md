@@ -1,78 +1,147 @@
-# Banking Transaction API (Spring Boot)
+# Banking Transaction API 💳
 
-Backend-focused project simulating real-world banking operations.
+A production-style RESTful Banking API built with **Java 17, Spring Boot, PostgreSQL, JWT Authentication, and Swagger/OpenAPI**.
 
-A production-ready RESTful Banking API built with Java, Spring Boot, and PostgreSQL.
+This project simulates real-world banking operations such as creating bank accounts, depositing money, withdrawing money, and transferring money between accounts.
 
-This project demonstrates clean backend architecture using layered design, DTO pattern, validation, transaction management, global exception handling, JWT authentication, logging, pagination, and unit testing.
-
----
-
-## Live Demo
-
-This project is a backend-only REST API.  
-The root URL may return `403 Forbidden` because there is no public homepage endpoint.
-
-API Base URL:  
-https://banking-transaction-api-production.up.railway.app
-
-Swagger UI:  
-https://banking-transaction-api-production.up.railway.app/swagger-ui.html
-
-OpenAPI Docs:  
-https://banking-transaction-api-production.up.railway.app/v3/api-docs
-
-> Use Swagger UI to test and interact with the API endpoints.
----
-
-## Features
-
-- Create bank accounts
-- Deposit money into accounts
-- Withdraw money from accounts
-- Transfer money between accounts
-
-- JWT-based authentication and authorization
-- DTO-based request and response structure
-- Input validation with Hibernate Validator
-- Global exception handling
-- Transaction management with @Transactional
-
-- Pagination support (page, size)
-- Logging with SLF4J
-- Unit testing with JUnit and Mockito
-- Swagger API documentation
-
-- Clean layered architecture (Controller → Service → Repository)
-- Cloud deployment using Railway
-- RESTful API design principles
+The application follows a clean layered architecture and demonstrates backend development best practices.
 
 ---
 
-## Architecture
+# 🚀 Features
 
-The project follows a layered architecture:
+## Authentication & Security
 
-Controller → Service → Repository → Entity → Database
+* User registration
+* User login
+* JWT-based authentication
+* Protected API endpoints
+* BCrypt password encryption
 
-- Controller Layer: Handles HTTP requests and API endpoints
-- Service Layer: Contains business logic
-- Repository Layer: Handles database operations via Spring Data JPA
-- Entity Layer: Represents database tables
-- DTO Layer: Separates API models from database models
-- Security Layer: Handles JWT authentication and authorization
-- Exception Handling: Centralized error handling using @RestControllerAdvice
+## Banking Operations
+
+* Create bank accounts
+* Get accounts with pagination
+* Deposit money
+* Withdraw money
+* Transfer money between accounts
+
+## Backend Features
+
+* RESTful API design
+* DTO pattern
+* Layered architecture
+* Input validation
+* Global exception handling
+* Transaction management with `@Transactional`
+* Pagination using Spring Data JPA
+* Logging with SLF4J
+* Unit testing with JUnit and Mockito
+
+## Documentation
+
+* Swagger UI
+* OpenAPI documentation
 
 ---
 
-## Project Structure
+# 🏗️ Architecture
+
+The project follows a clean layered architecture:
 
 ```
-com.serhat.bankingtransactionapi
-│
+Controller
+    |
+    ↓
+Service
+    |
+    ↓
+Repository
+    |
+    ↓
+Database (PostgreSQL)
+```
+
+## Project Layers
+
+### Controller Layer
+
+Responsible for handling HTTP requests and returning responses.
+
+Examples:
+
+```
+POST /accounts
+GET /accounts
+POST /accounts/transfer
+```
+
+---
+
+### Service Layer
+
+Contains the business logic.
+
+Examples:
+
+* Creating accounts
+* Checking balances
+* Processing money transfers
+* Handling banking operations
+
+---
+
+### Repository Layer
+
+Responsible for communication with the database using Spring Data JPA.
+
+---
+
+### Entity Layer
+
+Represents database tables.
+
+Main entities:
+
+* User
+* Account
+
+---
+
+### DTO Layer
+
+Separates API request/response objects from database entities.
+
+---
+
+# 🛠️ Technologies
+
+| Technology      | Purpose                          |
+| --------------- | -------------------------------- |
+| Java 17         | Programming language             |
+| Spring Boot     | Backend framework                |
+| Spring Security | Authentication and authorization |
+| JWT             | Secure API authentication        |
+| Spring Data JPA | Database access                  |
+| Hibernate       | ORM                              |
+| PostgreSQL      | Database                         |
+| Maven           | Dependency management            |
+| Swagger/OpenAPI | API documentation                |
+| JUnit 5         | Testing framework                |
+| Mockito         | Mock testing                     |
+| Railway         | Cloud deployment                 |
+
+---
+
+# 📂 Project Structure
+
+```
+src/main/java/com/serhat/bankingtransactionapi
+
 ├── config
-│   ├── OpenApiConfig.java
-│   └── SecurityConfig.java
+│   ├── SecurityConfig.java
+│   ├── JwtAuthenticationFilter.java
+│   └── OpenApiConfig.java
 │
 ├── controller
 │   ├── AccountController.java
@@ -80,7 +149,8 @@ com.serhat.bankingtransactionapi
 │
 ├── service
 │   ├── AccountService.java
-│   └── AuthService.java
+│   ├── AuthService.java
+│   └── JwtService.java
 │
 ├── repository
 │   ├── AccountRepository.java
@@ -91,179 +161,345 @@ com.serhat.bankingtransactionapi
 │   └── User.java
 │
 ├── dto
-│   ├── CreateAccountRequest.java
-│   ├── AccountResponse.java
-│   ├── DepositRequest.java
-│   ├── WithdrawRequest.java
-│   ├── TransferRequest.java
-│   ├── AuthRequest.java
-│   └── AuthResponse.java
 │
 ├── exception
-│   ├── AccountNotFoundException.java
-│   ├── DuplicateAccountNumberException.java
-│   ├── InsufficientBalanceException.java
-│   └── GlobalExceptionHandler.java
 │
 └── BankingTransactionApiApplication.java
 ```
 
 ---
 
-## Authentication
+# ⚙️ Requirements
 
-This API uses JWT (JSON Web Token) for authentication.
+Before running this project, install:
 
-Flow:
+## Java
 
-1. Register a user
-2. Login to receive a JWT token
-3. Use the token in requests
+Check:
 
-Header format:
+```bash
+java -version
+```
 
-Authorization: Bearer <your_token>
+Recommended:
 
----
-
-## Transaction Management
-
-All money operations (deposit, withdraw, transfer) are handled using @Transactional to ensure data consistency.
-
-If any step fails, the entire transaction is rolled back.
-
----
-
-## API Endpoints
-
-### Auth
-
-- POST /auth/register → Register user
-- POST /auth/login → Login and receive JWT
-
-### Accounts
-
-- GET /accounts → List accounts (paginated)
-- POST /accounts → Create account
-- POST /accounts/deposit → Deposit money
-- POST /accounts/withdraw → Withdraw money
-- POST /accounts/transfer → Transfer money
-
----
-
-## Pagination Example
-
-GET /accounts?page=0&size=10
-
----
-
-## Example Request
-
-POST /accounts
-
-```json
-{
-  "accountNumber": "TR1001",
-  "ownerName": "Serhat",
-  "balance": 5000
-}
+```
+Java 17+
 ```
 
 ---
 
-## Example Response
+## Maven
 
-```json
-{
-  "accountNumber": "TR1001",
-  "ownerName": "Serhat",
-  "balance": 5000
-}
+Check:
+
+```bash
+mvn -version
 ```
 
 ---
 
-## Error Response Example
+## PostgreSQL
 
-```json
-{
-  "timestamp": "2026-04-11T14:30:00",
-  "status": 400,
-  "error": "Bad Request",
-  "message": "Insufficient balance"
-}
+Create database:
+
+```sql
+CREATE DATABASE banking_db;
 ```
 
 ---
 
-## Database
+# 🔧 Configuration
 
-- PostgreSQL (Railway managed service)
-- Connection via environment variables:
-  - PGHOST
-  - PGPORT
-  - PGDATABASE
-  - PGUSER
-  - PGPASSWORD
-- Hibernate: ddl-auto=update
+Database configuration is located in:
+
+```
+src/main/resources/application.properties
+```
+
+Default local configuration:
+
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/banking_db
+spring.datasource.username=postgres
+spring.datasource.password=postgres123
+```
+
+You can change these values according to your PostgreSQL setup.
 
 ---
 
-## Technologies
+# ▶️ How to Run
 
-- Java 17
-- Spring Boot
-- Spring Data JPA
-- Hibernate
-- PostgreSQL
-- Maven
-- Swagger (OpenAPI)
-- JWT (Authentication)
-- SLF4J (Logging)
-- JUnit and Mockito (Testing)
-- Railway (Cloud Deployment)
+## 1. Clone Repository
+
+```bash
+git clone https://github.com/otmanedd/banking-transaction-api.git
+```
+
+Go into the project:
+
+```bash
+cd banking-transaction-api
+```
 
 ---
 
-## How to Run
+## 2. Build Project
 
-1. Clone the repository
+macOS / Linux:
 
+```bash
+./mvnw clean package
 ```
-git clone https://github.com/SerhatSerce/banking-transaction-api.git
+
+Windows:
+
+```bash
+mvnw.cmd clean package
 ```
 
-2. Configure database via environment variables
+---
 
-3. Run the application
+## 3. Start Application
 
-```
+macOS / Linux:
+
+```bash
 ./mvnw spring-boot:run
 ```
 
-4. Open Swagger UI
+The application runs on:
+
+```
+http://localhost:8080
+```
+
+---
+
+# 📖 Swagger API Documentation
+
+After starting the application, open:
 
 ```
 http://localhost:8080/swagger-ui.html
 ```
 
----
-
-## Learning Outcomes
-
-- Building REST APIs with Spring Boot
-- Designing layered backend architecture
-- Implementing JWT authentication
-- Managing transactions and data consistency
-- Applying validation and exception handling
-- Writing unit tests with Mockito
-- Using pagination in APIs
-- Logging backend operations
-- Deploying backend applications to cloud
-- Documenting APIs with Swagger
+Swagger provides an interactive interface to test all API endpoints.
 
 ---
 
-## Author
+# 🔐 Authentication Flow
 
-Serhat
+The API uses JWT authentication.
+
+## Step 1: Register User
+
+Endpoint:
+
+```
+POST /auth/register
+```
+
+Example request:
+
+```json
+{
+  "username": "otmane",
+  "password": "password123"
+}
+```
+
+Response:
+
+```
+User registered successfully
+```
+
+---
+
+## Step 2: Login
+
+Endpoint:
+
+```
+POST /auth/login
+```
+
+Example request:
+
+```json
+{
+  "username": "otmane",
+  "password": "password123"
+}
+```
+
+Response:
+
+```
+JWT Token
+```
+
+---
+
+## Step 3: Use Token
+
+For protected endpoints add:
+
+```
+Authorization: Bearer YOUR_JWT_TOKEN
+```
+
+Example:
+
+```
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
+```
+
+---
+
+# 💰 API Endpoints
+
+## Authentication
+
+### Register
+
+```
+POST /auth/register
+```
+
+### Login
+
+```
+POST /auth/login
+```
+
+---
+
+# Accounts
+
+## Create Account
+
+```
+POST /accounts
+```
+
+Example:
+
+```json
+{
+  "accountNumber": "DE1001",
+  "ownerName": "Otmane",
+  "balance": 5000
+}
+```
+
+---
+
+## Get Accounts
+
+Supports pagination:
+
+```
+GET /accounts?page=0&size=10
+```
+
+---
+
+## Deposit Money
+
+```
+POST /accounts/deposit
+```
+
+---
+
+## Withdraw Money
+
+```
+POST /accounts/withdraw
+```
+
+---
+
+## Transfer Money
+
+```
+POST /accounts/transfer
+```
+
+---
+
+# 🧪 Testing
+
+Run tests:
+
+```bash
+./mvnw test
+```
+
+Testing technologies:
+
+* JUnit 5
+* Mockito
+
+---
+
+# ☁️ Deployment
+
+The application can be deployed using cloud platforms:
+
+* Railway
+* Render
+* AWS
+
+Production database configuration uses environment variables:
+
+```
+PGHOST
+PGPORT
+PGDATABASE
+PGUSER
+PGPASSWORD
+```
+
+---
+
+# 🔒 Security Improvements
+
+For production environments:
+
+* Store JWT secrets in environment variables
+* Never commit passwords or secrets
+* Use HTTPS
+* Use secure database credentials
+
+---
+
+# 📚 Learning Outcomes
+
+This project demonstrates:
+
+✅ Building REST APIs with Spring Boot
+✅ Designing backend architecture
+✅ Implementing JWT authentication
+✅ Working with PostgreSQL databases
+✅ Managing financial transactions safely
+✅ Writing unit tests
+✅ Documenting APIs with Swagger
+✅ Deploying backend applications
+
+---
+
+# 👨‍💻 Author
+
+**Otmane Dyaf**
+
+GitHub:
+
+https://github.com/otmanedd
+
+LinkedIn:
+
+https://www.linkedin.com/in/otmane-dyaf-a1968b15b/
